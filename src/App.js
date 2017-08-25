@@ -14,6 +14,10 @@ class App extends Component {
 
   componentWillMount() {
     this.lock = new Auth0Lock(this.props.clientID, this.props.domain);
+    //On authentication
+    this.lock.on('authenticated', (authResult) => {
+      console.log(authResult);
+    });
   }
 
   showLock() {
