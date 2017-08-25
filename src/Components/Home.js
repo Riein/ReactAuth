@@ -6,7 +6,7 @@ class Home extends Component {
       <div>
         <h1>Welcome</h1>
         <p>Please login to view dashboard.</p>
-      </div
+      </div>
     );
   }
 }
