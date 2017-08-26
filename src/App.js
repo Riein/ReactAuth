@@ -11,13 +11,43 @@ class App extends Component {
     clientID: 'D1lywHicgnLVEO1N13er7DvHLkicOXCC',
     domain:'sashad.auth0.com'
   }
+  //Set token & profile data
+  setData(idToken, profile) {
+    localStorage.setItem('idToken', idToken);
+    localStorage.setItem('profile', JSON.stringify(profile));
+    this.setState({
+      idToken: localStorage.getItem('idToken'),
+      profile: JSON.parse(localStorage.getItem('profile'))
+    });
+  }
+
+  // Check for token and get profile data
+  getData() {
+    if(localStorage.getItem('idToken') != null) {
+      this.setState({
+        idToken: localStorage.getItem('idToken'),
+        profile: JSON.parse(localStorage.getItem('profile'))
+      }, () => {
+        console.log(this.state);
+      });
+    }
+  }
 
   componentWillMount() {
     this.lock = new Auth0Lock(this.props.clientID, this.props.domain);
     //On authentication
     this.lock.on('authenticated', (authResult) => {
-      console.log(authResult);
+      this.lock.getProfile(authResult.idToken, (error, profile) => {
+        if(error) {
+          console.log(error);
+          return;
+        }
+
+        this.setData(authResult.idToken, profile);
+      });
     });
+
+    this.getData();
   }
 
   showLock() {
